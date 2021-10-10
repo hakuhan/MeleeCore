@@ -2,7 +2,7 @@
 
 #include "MeleeDetection/DetectSolution.h"
 #include "MeleeDetection/CollisionDetectInfo.h"
-#include "DetectSolutions/CombatSolution.h"
+#include "CombatSolution.h"
 #include "RemoteDetectorInterface.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnRemoteHit, const FDetectInfo&, detectInfo, const FHurt&, hurt);

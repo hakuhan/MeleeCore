@@ -18,7 +18,7 @@ public class MeleeCore : ModuleRules
         PrivateIncludePaths.AddRange(
             new string[] {
                 "MeleeCore/Public/CombatComponents",
-                "MeleeCore/Public/DetectSolutions",
+                "MeleeCore/Public/MeleeCommons",
             }
             );
 
