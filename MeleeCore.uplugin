@@ -19,6 +19,11 @@
 			"Name": "MeleeCore",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "MeleeCoreEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }

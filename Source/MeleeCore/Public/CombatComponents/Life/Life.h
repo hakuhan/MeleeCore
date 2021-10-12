@@ -12,9 +12,6 @@ class MELEECORE_API ULife : public USceneComponent
 public:
     ULife();
 
-    UPROPERTY(EditAnywhere)
-    float m_Life = 10;
-
-    UPROPERTY()
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     UMeleeConditionalData* m_LifeHandler;
 };
