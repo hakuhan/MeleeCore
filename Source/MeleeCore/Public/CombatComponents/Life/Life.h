@@ -13,5 +13,5 @@ public:
     ULife();
 
     UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite)
-    UMeleeConditionalData* m_LifeHandler;
+    UMeleeConditionalData* m_LifeData;
 };
