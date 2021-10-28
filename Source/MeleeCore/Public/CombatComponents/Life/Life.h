@@ -12,6 +12,6 @@ class MELEECORE_API ULife : public USceneComponent
 public:
     ULife();
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, Instanced, BlueprintReadWrite)
     UMeleeConditionalData* m_LifeHandler;
 };

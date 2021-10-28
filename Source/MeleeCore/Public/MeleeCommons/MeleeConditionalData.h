@@ -8,7 +8,7 @@ DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FCheckingDelegate, float, conditi
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnConditionalDataUpdated, float, newValue);
 
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, EditInlineNew, DefaultToInstanced)
 class MELEECORE_API UMeleeConditionalData : public UObject
 {
     GENERATED_BODY()

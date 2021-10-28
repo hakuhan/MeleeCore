@@ -39,7 +39,8 @@ public class MeleeCoreEditor : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"UMGEditor",
-				"MeleeCore"
+				"MeleeCore",
+				"PropertyEditor"
 			}
 		);
     }
