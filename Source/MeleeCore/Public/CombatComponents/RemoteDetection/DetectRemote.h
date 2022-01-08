@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "RemoteDetectorInterface.h"
 #include "Engine/DataTable.h"
-#include "DetectSolutions/CombatSolution.h"
+#include "CombatSolution.h"
 
 #include "DetectRemote.generated.h"
 
