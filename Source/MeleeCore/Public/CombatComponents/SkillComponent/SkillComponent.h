@@ -52,6 +52,7 @@ struct FSkillComponentData
 		: DynamicData(NewObject<ASkillDynamicData>())
 	{
 		DynamicData->bDebug = bDebug;
+		bAutoPlay = false;
 	}
 };
 
