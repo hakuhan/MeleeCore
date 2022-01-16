@@ -26,24 +26,31 @@ void USkillComponent::BeginPlay()
     }
 }
 
-bool USkillComponent::SwitchSkill(const FString& lineName, const FString& skillName, bool bForce)
+bool USkillComponent::SwitchSkill(const FString& lineName, const FString& skillName, bool bForce, bool bAutoPlay)
 {
     bool result = false;
     int index = m_Info.SkillLines.IndexOfByPredicate([&](const FSkillLineInfo& _line){
         return _line.Name == lineName;
     });
 
+    if (index < 0)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Cannot find target line!"))
+        return false;
+    }
+
     if (bForce || !m_LineControl->IsExecuting())
     {
         SwitchSkill(index, skillName);
-        ResetSwitchState();
         result = true;
     }
     else if (m_LineControl->CanSwitch())
     {
-        UpdateSwitchState(true, index, skillName);
+        UpdateSwitchingState(true, index, skillName);
         result = true;
     }
+
+    m_Data.bAutoPlay = bAutoPlay;
 
     return result;
 }
@@ -51,6 +58,7 @@ bool USkillComponent::SwitchSkill(const FString& lineName, const FString& skillN
 
 bool USkillComponent::SwitchSkill(int lineIndex, const FString& skillName)
 {
+    bool result = false;
     m_LineControl->OnSwitchOut();
 
     if (lineIndex >= 0 && m_Data.LineIndex != lineIndex)
@@ -59,7 +67,17 @@ bool USkillComponent::SwitchSkill(int lineIndex, const FString& skillName)
         m_Data.LineIndex = lineIndex;
     }
 
-    return m_LineControl->StartLine(skillName);
+    if (skillName.IsEmpty())
+    {
+        result = m_LineControl->StartLine(skillName);
+    }
+    else
+    {
+        result = m_LineControl->SwitchSkill(skillName);
+    }
+    ResetSwitchingState();
+
+    return result;
 }
 
 void USkillComponent::OnSwitchEnd()
@@ -68,9 +86,18 @@ void USkillComponent::OnSwitchEnd()
     {
         SwitchSkill(m_Data.SwitchLineIndex, m_Data.SwitchSkillName);
     }
-
-    ResetSwitchState();
-    FSkillInfo skill;
+    else if (m_Data.bAutoPlay)
+    {
+        bool executingSkill = ExecuteSkill();
+        if (executingSkill)
+        {
+            SwitchSkill(m_Data.SwitchLineIndex, m_Data.SwitchSkillName);
+        }
+        else
+        {
+            m_Data.bAutoPlay = false;
+        }
+    }
 }
 
 bool USkillComponent::ExecuteSkill()
@@ -82,7 +109,7 @@ bool USkillComponent::ExecuteSkill()
         case ESkillState::SKILL_UNSTART:
         case ESkillState::SKILL_TERMINAl:
             m_LineControl->StartLine(FString());
-            ResetSwitchState();
+            ResetSwitchingState();
             result = true;
             break;
         
@@ -91,7 +118,7 @@ bool USkillComponent::ExecuteSkill()
             FString _nextSkillName = "";
             if (m_LineControl->CanSwitch() && m_LineControl->GetNextSkillName(_nextSkillName))
             {
-                UpdateSwitchState(true, -1, _nextSkillName);
+                UpdateSwitchingState(true, -1, _nextSkillName);
                 result = true;
             }
         }
@@ -115,17 +142,17 @@ bool USkillComponent::GetCurrentSkillName(FString& outName)
     return false;
 }
 
-void USkillComponent::UpdateSwitchState(bool bSwitch, int LineIndex, const FString& skilName)
+void USkillComponent::UpdateSwitchingState(bool bSwitch, int LineIndex, const FString& skillName)
 {
     m_Data.bSwitch = bSwitch;
     m_Data.SwitchLineIndex = LineIndex;
-    m_Data.SwitchSkillName = skilName;
+    m_Data.SwitchSkillName = skillName;
 }
 
 
-void USkillComponent::ResetSwitchState()
+void USkillComponent::ResetSwitchingState()
 {
-    UpdateSwitchState(false, 0, "");
+    UpdateSwitchingState(false, -1, "");
 }
 
 bool USkillComponent::IsExecuting()
@@ -193,4 +220,9 @@ bool USkillComponent::IsCurrentSkillLine(const FString& lineName)
     }
 
     return result;
+}
+
+bool USkillComponent::IsAutoPlaying() 
+{
+    return m_Data.bAutoPlay;    
 }

@@ -28,7 +28,12 @@ bool USkillLine::SwitchSkill(const FString& Name)
         return _info.Name == Name;
     });
 
-    return SwitchSkillByIndex(index);
+    if (index >= 0)
+    {
+        return SwitchSkillByIndex(index);
+    }
+    
+    return false;
 }
 
 bool USkillLine::StartLine(const FString& skillName)

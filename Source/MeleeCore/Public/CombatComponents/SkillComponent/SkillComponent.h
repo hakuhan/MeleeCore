@@ -37,6 +37,8 @@ struct FSkillComponentData
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		ASkillDynamicData* DynamicData;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+		bool bAutoPlay;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		bool bSwitch;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
 		int SwitchLineIndex;
@@ -81,20 +83,25 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		bool GetCurrentSkillName(FString& outName);
+
 #pragma endregion
 
 #pragma region Switch
+protected:
 	/// <summary>
-	/// Update switch state
+	/// Update switching state
 	/// </summary>
 	/// <param name="bSwitch">if true, skil will switch next when skill ending</param>
 	/// <param name="LineIndex">if this value less than 0, line will not switch</param>
 	/// <param name="skilName">skill name, if it's invalid skill will not swich successfuly</param>
-	void UpdateSwitchState(bool bSwitch,int LineIndex, const FString& skilName);
-	void ResetSwitchState();
+	void UpdateSwitchingState(bool bSwitch, int LineIndex, const FString& skilName);
+	void ResetSwitchingState();
+public:
 	UFUNCTION(BlueprintCallable, meta = (AutoCreateRefTerm = "skillName"))
-		bool SwitchSkill(const FString& lineName, const FString& skillName, bool bForce = false);
+		bool SwitchSkill(const FString& lineName, const FString& skillName, bool bForce = false, bool bAutoPlay = false);
 	bool SwitchSkill(int lineIndex, const FString& skillName);
+
+	// for notify calling
 	void OnSwitchEnd();
 #pragma endregion
 
@@ -107,6 +114,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		bool IsCurrentSkillLine(const FString& lineName);
+	
+	UFUNCTION(BlueprintCallable)
+		bool IsAutoPlaying();
 
 	// It's used in the hold line of skillComponent, skillLine and skill at run time
 	ASkillDynamicData* GetDynamicData()
