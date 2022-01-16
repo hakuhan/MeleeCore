@@ -116,7 +116,7 @@ bool UMotionSwitchRuleBase::CheckMotion(int id)
     {
         return false;
     }
-    return m_SwitchList.Contains(id);
+    return m_SwitchList.Contains(m_All) || m_SwitchList.Contains(id);
 }
 
 // If rule is not fonded, return true
