@@ -35,27 +35,29 @@ void UMotionSwitchRuleBase::UpdateAlternativeRules(const TMap<int, FMotionRuleEv
 
     for (auto _rule : rules)
     {
-        m_AlternativeRules.Add(_rule.Key, _rule.Value.Callback);
+        m_AlternativeRules.Add(FMotionRuleEventInfo(_rule.Key, _rule.Value.Callback));
     }
 }
 
 void UMotionSwitchRuleBase::UpdateBasicRule(int id, const FMotionRuleDelegate& event)
 {
-    if (m_BasicRules.Contains(id))
+    int index = m_BasicRules.IndexOfByPredicate([&](const FMotionRuleEventInfo& _eventInfo){return _eventInfo.TargetId == id; });
+    if (index >= 0)
     {
-        m_BasicRules[id] = event;
+        m_BasicRules[index].Rule = event;
     }
     else
     {
-        m_BasicRules.Add(id, event);
+        m_BasicRules.Add(FMotionRuleEventInfo(id, event));
     }
 }
 
 void UMotionSwitchRuleBase::RemoveBasicRule(int id)
 {
-    if (m_BasicRules.Contains(id))
+    int index = m_BasicRules.IndexOfByPredicate([&](const FMotionRuleEventInfo& _eventInfo){return _eventInfo.TargetId == id; });
+    if (index >= 0)
     {
-        m_BasicRules.Remove(id);
+        m_BasicRules.RemoveAt(index);
     }
 }
 
@@ -122,12 +124,17 @@ bool UMotionSwitchRuleBase::CheckMotion(int id)
 // If rule is not fonded, return true
 void UMotionSwitchRuleBase::CheckRule(int id, FMotionCheckResult& outResult)
 {
-    if (m_AlternativeRules.Contains(id))
+    int _alterRuleIndex = m_AlternativeRules.IndexOfByPredicate([&](const FMotionRuleEventInfo& _eventInfo){return _eventInfo.TargetId == id; });
+    if (_alterRuleIndex >= 0)
     {
-        outResult = m_AlternativeRules[id].Execute();
+        outResult = m_AlternativeRules[_alterRuleIndex].Rule.Execute();
     }
-    else if (m_BasicRules.Contains(id))
+    else
     {
-        outResult = m_BasicRules[id].Execute();
+        int _basicRuleIndex = m_BasicRules.IndexOfByPredicate([&](const FMotionRuleEventInfo& _eventInfo){return _eventInfo.TargetId == id; });
+        if (_basicRuleIndex >= 0)
+        {
+            outResult = m_BasicRules[_basicRuleIndex].Rule.Execute();
+        }
     }
 }

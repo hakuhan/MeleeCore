@@ -33,7 +33,8 @@ public class MeleeCoreEditor : ModuleRules
 			{
 				"Projects",
 				"InputCore",
-				"EditorFramework",
+				// UE5
+				// "EditorFramework",
 				"UnrealEd",
 				"ToolMenus",
 				"CoreUObject",

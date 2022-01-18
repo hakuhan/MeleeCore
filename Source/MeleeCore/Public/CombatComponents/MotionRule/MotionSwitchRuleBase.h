@@ -37,6 +37,26 @@ struct FMotionInfo
     bool SwitchSelf;
 };
 
+USTRUCT(BlueprintType)
+struct FMotionRuleEventInfo
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+    int TargetId;
+    UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+    FMotionRuleDelegate Rule;
+
+    FMotionRuleEventInfo()
+    {}
+
+    FMotionRuleEventInfo(int id, FMotionRuleDelegate rule)
+    {
+        TargetId = id;
+        Rule = rule;
+    }
+};
+
 UCLASS(Blueprintable, ClassGroup = (MeleeCore))
 class MELEECORE_API UMotionSwitchRuleBase : public UActorComponent, public IMotionSwitchRule
 {
@@ -97,9 +117,9 @@ public:
     TArray<int> m_ForbiddenList;
 
     UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Rule info")
-    TMap<int, FMotionRuleDelegate> m_BasicRules;
+    TArray<FMotionRuleEventInfo> m_BasicRules;
     UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Rule info")
-    TMap<int, FMotionRuleDelegate> m_AlternativeRules;
+    TArray<FMotionRuleEventInfo> m_AlternativeRules;
 
 private:
     int m_All = -1;
