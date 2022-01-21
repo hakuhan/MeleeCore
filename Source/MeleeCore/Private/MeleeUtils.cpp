@@ -143,6 +143,21 @@ FAnimMontageInstance* UMeleeUtils::GetMontageInstance(AActor* target)
     return nullptr;
 }
 
+bool UMeleeUtils::CheckCameraLookUpAngle(float inAxis, float maxAngle, float minAngle, const FRotator &springArmRotator) 
+{
+    bool result = false;
+
+    if (inAxis > 0 && (springArmRotator.Pitch + inAxis) < maxAngle)
+    {
+        result = true;
+    }
+    else if (inAxis < 0 && (springArmRotator.Pitch + inAxis) > minAngle)
+    {
+        result = true;
+    }
+
+    return result;
+}
 
 // template <typename InterfaceType>
 // void UMeleeUtils::CallInterfaceFromActor(AActor *actor, TScriptInterface<InterfaceType> interface, UMeleeUtils::FCallInterfaceDelegate function , bool value)

@@ -34,7 +34,10 @@ public:
     static bool BriefPauseMontage(AActor* target, float duration);
     
     static FAnimMontageInstance* GetMontageInstance(AActor* target);
-    
+
+    UFUNCTION(BlueprintCallable)
+    static bool CheckCameraLookUpAngle(float inAxis, float maxAngle, float minAngle, const FRotator &springArmRotator);
+
     // UFUNCTION(BlueprintCallable)
     // static void TestWeapon(UPARAM(meta=(AllowAbstract = "UMeleeWeapon")) USceneComponent* weapon)
     // {
