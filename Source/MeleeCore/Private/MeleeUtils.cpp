@@ -159,6 +159,33 @@ bool UMeleeUtils::CheckCameraLookUpAngle(float inAxis, float maxAngle, float min
     return result;
 }
 
+bool UMeleeUtils::RotateActorZAxisByVector(AActor* targetActor, const FVector& vector) 
+{
+    if (!targetActor || UKismetMathLibrary::Vector_IsZero(vector))
+    {
+        return false;
+    }
+
+    auto forwardVector = targetActor->GetActorForwardVector();
+
+    // Check direction
+    auto crossVector = UKismetMathLibrary::Cross_VectorVector(forwardVector, vector);
+    bool negativeAngle = crossVector.Z < 0;
+
+    // Get angle
+    auto angleDot = UKismetMathLibrary::Dot_VectorVector(forwardVector, vector);
+    auto angle = UKismetMathLibrary::DegAcos(angleDot);
+    if (negativeAngle)
+    {
+        angle = 360 - angle;
+    }
+
+    // Rotate actor
+    targetActor->AddActorWorldRotation(FRotator(0, angle, 0));
+    
+    return true;
+}
+
 // template <typename InterfaceType>
 // void UMeleeUtils::CallInterfaceFromActor(AActor *actor, TScriptInterface<InterfaceType> interface, UMeleeUtils::FCallInterfaceDelegate function , bool value)
 // {

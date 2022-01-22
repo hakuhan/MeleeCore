@@ -38,6 +38,9 @@ public:
     UFUNCTION(BlueprintCallable)
     static bool CheckCameraLookUpAngle(float inAxis, float maxAngle, float minAngle, const FRotator &springArmRotator);
 
+    UFUNCTION(BlueprintCallable)
+    static bool RotateActorZAxisByVector(AActor* targetActor, const FVector& vector);
+
     // UFUNCTION(BlueprintCallable)
     // static void TestWeapon(UPARAM(meta=(AllowAbstract = "UMeleeWeapon")) USceneComponent* weapon)
     // {
